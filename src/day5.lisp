@@ -45,11 +45,13 @@
       (eql 0 (car location))))
 
 (defun part-2 ()
-  (let ((occupied-seats
+  (let* ((occupied-seats
 	  (mapcar
 	   #'get-seat-id
 	   (remove-if #'is-front-or-back-p
-		      input))))
-    (loop :for id :from (apply #'min occupied-seats) :to (apply #'max occupied-seats)
+		      input)))
+	(min-id (apply #'min occupied-seats))
+	(max-id (apply #'max occupied-seats)))
+    (loop :for id :from min-id :to max-id
 	  :when (null (member id occupied-seats)) :do
 	    (return id))))
