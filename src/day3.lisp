@@ -11,10 +11,9 @@
 (defconstant input-width
   (length (first input)))
 
-(defconstant tree
-  #\#)
+(defconstant tree #\#)
 
-(defun count-trees (dx dy &optional (x 0)(forest input) (count 0))
+(defun count-trees (dx dy &optional (x 0) (forest input) (count 0))
   (if (null forest)
       count
       (let* ((tree-line (first forest))
