@@ -5,41 +5,51 @@
    #:part-2))
 (in-package :aoc20/5)
 
-(defconstant input
-  (uiop:read-file-lines #P"../inputs/day5.txt"))
-
 (defun parse-char (char)
   (cond
     ((or (char= #\F char) (char= #\L char)) 0)
     ((or (char= #\B char) (char= #\R char)) 1)
     (t nil)))
 
-(defun parse-longitudinal (string)
+(defun parse-row (string)
   (loop :for i :from 0 :to 6
 	:collect (* (expt 2 (- 6 i))
 		    (parse-char (char string i)))))
 
-(defun parse-transversal (string)
+(defun parse-col (string)
     (loop :for i :from 0 :to 2
 	:collect (* (expt 2 (- 2 i))
 		    (parse-char (char string (+ i 7))))))
 
 (defun parse-line (string)
-  (destructuring-bind (row col)
-      (list (reduce #'+ (parse-longitudinal string))
-	    (reduce #'+ (parse-transversal string)))
-    (cons row col)))
+  (cons (reduce #'+ (parse-row string))
+	(reduce #'+ (parse-col string))))
 
 (defun get-seat-id (location)
   (+ (* (car location) 8)
      (cdr location)))
 
+(defconstant input
+  (mapcar
+   #'parse-line
+   (uiop:read-file-lines #P"../inputs/day5.txt")))
+
 (defun part-1 ()
   (apply #'max
 	 (mapcar
-	  (lambda (line)
-	    (get-seat-id (parse-line line)))
+	  #'get-seat-id
 	  input)))
 
+(defun is-front-or-back-p (location)
+  (or (eql #b1111111 (car location))
+      (eql 0 (car location))))
+
 (defun part-2 ()
-  ())
+  (let ((occupied-seats
+	  (mapcar
+	   #'get-seat-id
+	   (remove-if #'is-front-or-back-p
+		      input))))
+    (loop :for id :from (apply #'min occupied-seats) :to (apply #'max occupied-seats)
+	  :when (null (member id occupied-seats)) :do
+	    (return id))))
