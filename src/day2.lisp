@@ -45,20 +45,20 @@
       (password-field-second password)))
    input))
 
-(defun xor (a b)
-  (if a (not b) b))
+(defmacro xor (a b)
+  `(if ,a (not ,b) ,b))
 
-(defun char-at (string index)
-  (char string (1- index)))
+(defmacro char-from-1 (string index)
+  `(char ,string (1- ,index)))
 
 (defun part-2()
   (count-if
    (lambda (password)
      (xor
       (char= (password-field-char password)
-	     (char-at (password-field-password password)
-		      (password-field-first password)))
+	     (char-from-1 (password-field-password password)
+			  (password-field-first password)))
       (char= (password-field-char password)
-	     (char-at (password-field-password password)
-		      (password-field-second password)))))
+	     (char-from-1 (password-field-password password)
+			  (password-field-second password)))))
    input))
