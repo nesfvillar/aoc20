@@ -52,7 +52,7 @@
 		 (can-hold-shiny-p (assoc (car bag) input :test #'string=)))
 	       can-see)
 	 (setf (gethash current *can-hold-shinies*) t))
-	(t (setf (gethash current *can-hold-shinies*) nil))))))
+	(t nil)))))
 
 (defun part-1 ()
   (count-if
