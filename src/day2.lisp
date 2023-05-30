@@ -7,10 +7,11 @@
    #:part-2))
 (in-package :aoc20/2)
 
-(defconstant input
-  (mapcar
-   (uiop:read-file-lines #P"../inputs/day2.txt")))
-
+(defstruct password-field
+  first
+  second
+  char
+  password)
 
 (defun parse-password (string)
   (destructuring-bind
@@ -23,14 +24,25 @@
 	  (l-range u-range)
 	  (mapcar #'parse-integer
 		  (cl-ppcre:split "-" range))
-	(list l-range u-range (char char 0) password)))))
+	(make-password-field
+	 :first l-range
+	 :second u-range
+	 :char (char char 0)
+	 :password password)))))
+
+(defconstant input
+  (mapcar
+   #'parse-password
+   (uiop:read-file-lines #P"../inputs/day2.txt")))
 
 (defun part-1 ()
   (count-if
    (lambda (password)
-     (destructuring-bind (l-range u-range char pass)
-	 (parse-password password)
-       (<= l-range (count char pass) u-range)))
+     (<=
+      (password-field-first password)
+      (count (password-field-char password)
+	     (password-field-password password))
+      (password-field-second password)))
    input))
 
 (defun xor (a b)
@@ -42,9 +54,11 @@
 (defun part-2()
   (count-if
    (lambda (password)
-     (destructuring-bind (first second char password)
-	 (parse-password password)
-       (xor
-	(char= char (char-at password first))
-	(char= char (char-at password second)))))
+     (xor
+      (char= (password-field-char password)
+	     (char-at (password-field-password password)
+		      (password-field-first password)))
+      (char= (password-field-char password)
+	     (char-at (password-field-password password)
+		      (password-field-second password)))))
    input))
