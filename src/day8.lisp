@@ -61,11 +61,54 @@
     (loop :for pc = (emulator-pc em)
 	  :for ins = (aref instructions pc)
 	  :unless (member pc seen) :do
-	    (progn
-	      (emulator-loop em ins)
-	      (setf seen (cons pc seen)))
+	  (progn
+	    (emulator-loop em ins)
+	    (setf seen (cons pc seen)))
 	  :else :do
-	    (return (emulator-acc em)))))
+	  (return (emulator-acc em)))))
+
+(defun swap-jmp-nop (index)
+  (cond
+    ((eq 'jmp
+	 (instruction-op (aref instructions index)))
+     (setf (instruction-op (aref instructions index))
+	   'nop))
+    ((eq 'nop
+     	 (instruction-op (aref instructions index)))
+     (setf (instruction-op (aref instructions index))
+	   'jmp))
+    (t nil)))
+
+(defun correct-instruction (em &optional (seen nil) (swapped-p nil))
+  (progn
+    (if (= (emulator-pc em)
+	   (length instructions))
+	(return-from correct-instruction (emulator-acc em)))
+
+    (if (member (emulator-pc em)
+		seen)
+	(return-from correct-instruction nil))
+    
+    (let* ((next-em (emulator-loop (copy-emulator em)
+				   (aref instructions (emulator-pc em))))
+	   (result (correct-instruction next-em
+					(cons (emulator-pc em)
+					      seen)
+					swapped-p)))
+      (cond
+	((not (null result)) result)
+	((and (not swapped-p)
+	      (swap-jmp-nop (emulator-pc em)))
+	 (progn
+	   (setf next-em (emulator-loop (copy-emulator em)
+					(aref instructions (emulator-pc em))))
+	   (setf result (correct-instruction next-em
+					     (cons (emulator-pc em)
+						   seen)
+					     t))
+	   (swap-jmp-nop (emulator-pc em))
+	   (return-from correct-instruction result)))
+	 (t (return-from correct-instruction result))))))
 
 (defun part-2 ()
-  ())
+  (correct-instruction (make-emulator)))
