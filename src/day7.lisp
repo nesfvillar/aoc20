@@ -1,5 +1,6 @@
 (defpackage :aoc20/7
-  (:use :cl)
+  (:use :cl
+	:aoc20/utils)
   (:export
    #:part-1
    #:part-2))
@@ -38,21 +39,11 @@
    #'parse-line
    (uiop:read-file-lines #P"../inputs/day7.txt")))
 
-(defparameter *can-hold-shinies* (make-hash-table :test #'equal))
-
-(defun can-hold-shiny-p (bag)
-  (let ((current (car bag))
-	(can-see (cdr bag)))
-    (progn
-      (setf (gethash current *can-hold-shinies*) nil)
-      (cond
-	((gethash current *can-hold-shinies*) (gethash current *can-hold-shinies*))
-	((assoc "shiny gold" can-see :test #'string=) (setf (gethash current *can-hold-shinies*) t))
-	((some (lambda (bag)
-		 (can-hold-shiny-p (assoc (car bag) input :test #'string=)))
-	       can-see)
-	 (setf (gethash current *can-hold-shinies*) t))
-	(t nil)))))
+(defun-memoized can-hold-shiny-p (bag)
+  (if (assoc "shiny gold" bag :key 'cdr :test #'string=) t
+      (some (lambda (bag)
+	      (can-hold-shiny-p (assoc bag input :test #'string=)))
+	    (cdr bag))))
 
 (defun part-1 ()
   (count-if
@@ -64,7 +55,7 @@
       (reduce #'+
 	      (mapcar
 	       (lambda (bag)
-		 (* (1+ (count-bags-inside (assoc (car bag) input :test #'string=))) (cdr bag))))
+		 (* (1+ (count-bags-inside (assoc (car bag) input :test #'string=))) (cdr bag)))
 	      (cdr bag)))))
 
 (defun part-2 ()

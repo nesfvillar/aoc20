@@ -71,10 +71,10 @@
     (t nil)))
 
 (defun hcl-valid-p (value)
-  (not (null (cl-ppcre:scan "#[A-f\\d]{6}" value))))
+  (cl-ppcre:scan "#[A-f\\d]{6}" value))
 
 (defun ecl-valid-p (value)
-  (not (null (member value '("amb" "blu" "brn" "gry" "grn" "hzl" "oth") :test #'string=))))
+  (member value '("amb" "blu" "brn" "gry" "grn" "hzl" "oth") :test #'string=))
 
 (defun pid-valid-p (value)
   (eql 9 (length value)))
