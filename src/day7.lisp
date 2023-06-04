@@ -1,3 +1,5 @@
+(ql:quickload "cl-ppcre")
+
 (defpackage :aoc20/7
   (:use :cl
 	:aoc20/utils)
@@ -5,8 +7,6 @@
    #:part-1
    #:part-2))
 (in-package :aoc20/7)
-
-(ql:quickload "cl-ppcre")
 
 (defun split-line (line)
   (cl-ppcre:split "\\scontain\\s" line))
