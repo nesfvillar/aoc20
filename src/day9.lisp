@@ -40,10 +40,9 @@
   (loop :for i :from min-idx :upto (1- max-idx)
 	:collect (aref array i)))
 
-;; Need memoization
-(defun find-set (sum-val min-idx max-idx)
+(defun-memoized find-set (sum-val min-idx max-idx)
   (progn
-    (if (>= (1+ min-idx) max-idx)
+    (if (>= min-idx max-idx)
 	(return-from find-set nil))
 
     (if (apply #'sum-of-p
