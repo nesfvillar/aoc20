@@ -41,10 +41,9 @@
     (loop :for j :from (+ i 2) :upto (length input)
 	  :for values = (coerce (subseq input i j) 'list)
 	  :when (apply #'sum-of-p sum-value values)
-	    :do (return-from find-set (cons i j)))))
+	    :do (return-from find-set values))))
 
 (defun part-2 ()
-  (let* ((indices (find-set (part-1)))
-	 (values (subseq input (car indices) (cdr indices))))
+  (let ((values (find-set (part-1))))
     (+ (reduce #'min values)
        (reduce #'max values))))
