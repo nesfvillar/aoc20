@@ -36,44 +36,15 @@
 	:when (null (find-two-sum i))
 	  :do (return (aref input i))))
 
-(defun range (array min-idx max-idx)
-  (loop :for i :from min-idx :upto (1- max-idx)
-	:collect (aref array i)))
-
-(defun-memoized find-set (sum-val min-idx max-idx)
-  (progn
-    (if (>= min-idx max-idx)
-	(return-from find-set nil))
-
-    (if (apply #'sum-of-p
-	       (cons sum-val (range input min-idx max-idx)))
-	(return-from find-set (cons min-idx max-idx)))
-
-    (let ((left-result (find-set sum-val
-				 (1+ min-idx)
-				 max-idx)))
-      (if left-result
-	  (return-from find-set left-result)))
-
-    (let ((right-result (find-set sum-val
-				  min-idx
-				  (1- max-idx))))
-      (if right-result
-	  (return-from find-set right-result)))))
-
+(defun find-set (sum-value)
+  (loop :for i :from 0 :below (length input) :do
+    (loop :for j :from (+ i 2) :upto (length input)
+	  :for values = (coerce (subseq input i j) 'list)
+	  :when (apply #'sum-of-p sum-value values)
+	    :do (return-from find-set (cons i j)))))
 
 (defun part-2 ()
-  (let* ((sum-index (loop :for i :from 25
-			  :when (null (find-two-sum i))
-			    :do (return i)))
-	 (left-result (find-set (aref input sum-index)
-				0
-				(1- sum-index)))
-	 (right-result (find-set (aref input sum-index)
-				 (1+ sum-index)
-				 (length input))))
-    (if left-result
-	(+ (car left-result)
-	   (cdr left-result))
-	(+ (car right-result)
-	   (cdr right-result)))))
+  (let* ((indices (find-set (part-1)))
+	 (values (subseq input (car indices) (cdr indices))))
+    (+ (reduce #'min values)
+       (reduce #'max values))))
