@@ -40,9 +40,9 @@
    (uiop:read-file-lines #P"../inputs/day7.txt")))
 
 (defun-memoized can-hold-shiny-p (bag)
-  (if (assoc "shiny gold" bag :key 'cdr :test #'string=) t
+  (if (assoc "shiny gold" (cdr bag) :test #'string=) t
       (some (lambda (bag)
-	      (can-hold-shiny-p (assoc bag input :test #'string=)))
+	      (can-hold-shiny-p (assoc (car bag) input :test #'string=)))
 	    (cdr bag))))
 
 (defun part-1 ()
