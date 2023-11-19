@@ -33,7 +33,7 @@
 (defconstant input
   (mapcar
    #'parse-password
-   (uiop:read-file-lines #P"../inputs/day2.txt")))
+   (uiop:read-file-lines #P"inputs/day2.txt")))
 
 (defun part-1 ()
   (count-if

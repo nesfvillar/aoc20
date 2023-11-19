@@ -11,8 +11,8 @@
   (mapcar
    (lambda (group)
      (cl-ppcre:split "\\s+" group))
-  (cl-ppcre:split "\\n\\s*\\n" 
-		  (uiop:read-file-string #P"../inputs/day6.txt"))))
+  (cl-ppcre:split "\\n\\s*\\n"
+		  (uiop:read-file-string #P"inputs/day6.txt"))))
 
 (defun strings-to-group (strings)
   (mapcar (lambda (string)

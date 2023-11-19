@@ -32,7 +32,7 @@
 (defconstant input
   (mapcar
    #'parse-line
-   (uiop:read-file-lines #P"../inputs/day5.txt")))
+   (uiop:read-file-lines #P"inputs/day5.txt")))
 
 (defun part-1 ()
   (apply #'max

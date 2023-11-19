@@ -6,7 +6,7 @@
 (in-package :aoc20/3)
 
 (defconstant input
-   (uiop:read-file-lines #P"../inputs/day3.txt"))
+   (uiop:read-file-lines #P"inputs/day3.txt"))
 
 (defconstant input-width
   (length (first input)))

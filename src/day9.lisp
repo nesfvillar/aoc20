@@ -6,7 +6,7 @@
 (in-package :aoc20/9)
 
 (defconstant input
-  (let ((lines (uiop:read-file-lines #P"../inputs/day9.txt")))
+  (let ((lines (uiop:read-file-lines #P"inputs/day9.txt")))
     (make-array (length lines)
 		:initial-contents (mapcar
 				   #'parse-integer

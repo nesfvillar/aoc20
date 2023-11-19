@@ -18,7 +18,7 @@
 (defconstant input
   (mapcar
    #'credential-parse
-  (cl-ppcre:split "\\n\\s?\\n" (uiop:read-file-string #P"../inputs/day4.txt"))))
+  (cl-ppcre:split "\\n\\s?\\n" (uiop:read-file-string #P"inputs/day4.txt"))))
 
 (defconstant neccesary-fields
   '(byr
@@ -34,7 +34,7 @@
    (lambda (field)
      (null (assoc field credential)))
    neccesary-fields))
-  
+
 
 (defun part-1 ()
   (count-if

@@ -1,4 +1,5 @@
 (ql:quickload "cl-ppcre")
+(load #P"src/utils.lisp")
 
 (defpackage :aoc20/7
   (:use :cl
@@ -37,7 +38,7 @@
 (defconstant input
   (mapcar
    #'parse-line
-   (uiop:read-file-lines #P"../inputs/day7.txt")))
+   (uiop:read-file-lines #P"inputs/day7.txt")))
 
 (defun-memoized can-hold-shiny-p (bag)
   (if (assoc "shiny gold" (cdr bag) :test #'string=) t

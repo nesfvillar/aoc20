@@ -12,7 +12,7 @@
   (mapcar
    (lambda (line)
      (cl-ppcre:split "\\s" line))
-   (uiop:read-file-lines #P"../inputs/day8.txt")))
+   (uiop:read-file-lines #P"inputs/day8.txt")))
 
 (defstruct instruction
   :op
@@ -88,7 +88,7 @@
     (if (member (emulator-pc em)
 		seen)
 	(return-from correct-instruction nil))
-    
+
     (let* ((next-em (emulator-loop (copy-emulator em)
 				   (aref instructions (emulator-pc em))))
 	   (result (correct-instruction next-em
